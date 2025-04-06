@@ -144,6 +144,8 @@ for asset in assets:
 
     temp['Return'] = temp['Price'].pct_change()
     temp['Volatility'] = temp['Return'].rolling(30).std()
+
+    temp['Liquidity'] = temp['Volume'].pct_change()
     temp['Liquidity'] = temp['Volume'].rolling(30).mean()
 
     avg_return = temp['Return'].mean()
@@ -194,12 +196,12 @@ asset_df.to_csv("asset_features.csv", index=False)
 print("✅ Saved asset_features.csv")
 
 # 5. Train ML Model
-X = asset_df[['Avg_Return', 'Volatility', 'Liquidity', 'Market_Risk', 'Timing_Risk']]
+X = asset_df[[ 'Volatility', 'Liquidity', 'Market_Risk', 'Timing_Risk, 'Avg_Return' ]]
 y = asset_df['Risk_Level']
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y,train_size=0.8, test_size=0.2, random_state=42)
 
-model = RandomForestClassifier(n_estimators=100, random_state=42)
+model = RandomForestClassifier(n_estimators=100, class_weight='balanced', random_state=42)
 model.fit(X_train, y_train)
 
 print("✅ Accuracy:", model.score(X_test, y_test))
