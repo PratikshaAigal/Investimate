@@ -122,11 +122,16 @@ df= df.dropna()
 
 
 from sklearn.preprocessing import MinMaxScaler
+asset = ['Natural_Gas', 'Crude_oil', 'Copper', 'Bitcoin', 'Platinum', 'Ethereum',
+          'Apple', 'Tesla', 'Microsoft', 'Silver', 'Google', 'Nvidia', 'Berkshire',
+          'Netflix', 'Amazon', 'Meta', 'Gold']
 
+asset_data = []
 # Step 1: Normalize the risk features
 risk_features = ['Market_Risk', 'Avg_Liquidity', 'Volatility_Risk', 'Timing_Risk','Return','Volatility']
 scaler = MinMaxScaler()
 df_scaled = pd.DataFrame(scaler.fit_transform(df[risk_features]), columns=risk_features)
+# print(df_scaled.head())
 
 # Step 2: Combine into a single composite risk score (e.g., average)
 df['Composite_Risk_Score'] = df_scaled.mean(axis=1)
@@ -140,18 +145,38 @@ def classify_risk(score):
     else:
         return 'High'
 
+
+asset_data.append({
+        'Asset': asset,
+        'Overall_Market_Risk': df['Market_Risk'],
+        'Avg_Return_company_specific': df_result,
+        'Volatility': df['Volatility_Risk'],
+        'Liquidity': df['Avg_Liquidity'],
+        'Timing_Risk': df['Timing_Risk'],
+        'Combined_Risk_Score': df['Composite_Risk_Score']
+    })
+
+asset_df = pd.DataFrame(asset_data).dropna()
+
 df['Overall_Risk_Level'] = df['Composite_Risk_Score'].apply(classify_risk)
+# asset_df['Risk_Level'] = asset_df['Normalized_Risk_Score'].apply(classify_risk)
+ 
+asset_df.to_csv('asset_features.csv', index=False)
+print("asset feature saved")
+
+
+
 
 # Optional: Encode it for model training
 risk_label_map = {'Low': 0, 'Medium': 1, 'High': 2}
 df['Risk_Label'] = df['Overall_Risk_Level'].map(risk_label_map)
 
+
+
 # Drop NaNs just in case
 df.dropna(subset=['Risk_Label'], inplace=True)
 
-print(df)
-
-
+# print(df)
 
 
 #Model Training
