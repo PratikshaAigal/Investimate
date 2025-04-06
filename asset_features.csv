@@ -1,0 +1,70 @@
+Asset,Overall_Market_Risk,Avg_Return_company_specific,Volatility,Liquidity,Timing_Risk,Combined_Risk_Score
+"['Natural_Gas', 'Crude_oil', 'Copper', 'Bitcoin', 'Platinum', 'Ethereum', 'Apple', 'Tesla', 'Microsoft', 'Silver', 'Google', 'Nvidia', 'Berkshire', 'Netflix', 'Amazon', 'Meta', 'Gold']","166    0.009134
+167    0.008595
+168    0.008521
+169    0.008746
+170    0.008687
+         ...   
+863    0.014662
+864    0.013789
+865    0.013635
+866    0.013557
+867    0.013377
+Name: Market_Risk, Length: 548, dtype: float64","     Natural_Gas_Volatility Natural_Gas_Risk_Level  ...  Gold_Volatility Gold_Risk_Level
+97                 0.045045                 Medium  ...         0.017433            High
+98                 0.045118                 Medium  ...         0.017418            High
+99                 0.045239                 Medium  ...         0.017425            High
+100                0.045588                 Medium  ...         0.017448            High
+101                0.045300                 Medium  ...         0.016957            High
+..                      ...                    ...  ...              ...             ...
+863                0.050892                 Medium  ...         0.014340            High
+864                0.044113                 Medium  ...         0.014316            High
+865                0.044110                 Medium  ...         0.014496            High
+866                0.038990                 Medium  ...         0.014022            High
+867                0.039837                 Medium  ...         0.014357            High
+
+[577 rows x 34 columns]","166    0.006089
+167    0.005979
+168    0.006004
+169    0.006423
+170    0.006497
+         ...   
+863    0.014340
+864    0.014316
+865    0.014496
+866    0.014022
+867    0.014357
+Name: Volatility_Risk, Length: 548, dtype: float64","166    3.703927e+07
+167    3.724041e+07
+168    3.744317e+07
+169    3.773587e+07
+170    3.868563e+07
+           ...     
+863    5.262970e+07
+864    5.212879e+07
+865    5.102762e+07
+866    4.961688e+07
+867    4.947679e+07
+Name: Avg_Liquidity, Length: 548, dtype: float64","166   -0.051358
+167   -0.053586
+168   -0.051686
+169   -0.065271
+170   -0.074393
+         ...   
+863   -0.301316
+864   -0.301758
+865   -0.306217
+866   -0.310650
+867   -0.313131
+Name: Timing_Risk, Length: 548, dtype: float64","166    0.508467
+167    0.495490
+168    0.556425
+169    0.524624
+170    0.578224
+         ...   
+863         NaN
+864         NaN
+865         NaN
+866         NaN
+867         NaN
+Name: Composite_Risk_Score, Length: 548, dtype: float64"
