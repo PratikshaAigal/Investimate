@@ -39,6 +39,41 @@
 
     <hr>
     <p class="mt-3">💡 Based on your profile, we recommend exploring assets that align with your {{ risk_level|lower }} risk appetite. Chat with Investimate for personalized suggestions.</p>
+
+        <!-- 🔽 New: Asset Recommendations Section -->
+    {% if recommendations %}
+    <hr>
+    <h5 class="mt-4">Top Investment Recommendations</h5>
+    <table class="table table-bordered mt-3">
+      <thead class="table-dark">
+        <tr>
+          <th>Asset</th>
+          <th>Average Return (%)</th>
+          <th>Volatility</th>
+          <th>Risk Level</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for asset in recommendations %}
+        <tr>
+          <td>{{ asset.Asset }}</td>
+          <td>{{ asset.Avg_Return|floatformat:2 }}</td>
+          <td>{{ asset.Volatility|floatformat:4 }}</td>
+          <td>
+            {% if asset.Risk_Level == "Low" %}
+              <span class="badge bg-success">Low</span>
+            {% elif asset.Risk_Level == "Medium" %}
+              <span class="badge bg-warning text-dark">Medium</span>
+            {% else %}
+              <span class="badge bg-danger">High</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+
   </div>
 
 

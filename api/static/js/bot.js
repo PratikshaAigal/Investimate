@@ -72,7 +72,7 @@ msgForm.addEventListener("submit", async (e) => {
   msgInput.value = "";
 
   try {
-    const response = await fetch('/api/chat/', {
+    const response = await fetch('/chat/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: msgText })
@@ -90,7 +90,28 @@ msgForm.addEventListener("submit", async (e) => {
 });
 
 // === Message Rendering ===
-function appendMessage(name, img, side, text) {
+//function appendMessage(name, img, side, text) {
+//  const msgHTML = `
+//    <div class="msg ${side}-msg">
+//      <div class="msg-img" style="background-image: url(${img})"></div>
+//      <div class="msg-bubble">
+//        <div class="msg-info">
+//          <div class="msg-info-name">${name}</div>
+//          <div class="msg-info-time">${formatDate(new Date())}</div>
+//        </div>
+//        <div class="msg-text">${text}</div>
+//      </div>
+//    </div>
+//  `;
+//
+//  chatbox.insertAdjacentHTML("beforeend", msgHTML);
+//  chatbox.scrollTop = chatbox.scrollHeight;
+//}
+
+
+function appendMessage(name, img, side, rawText) {
+  const formattedText = formatMessageText(rawText);
+
   const msgHTML = `
     <div class="msg ${side}-msg">
       <div class="msg-img" style="background-image: url(${img})"></div>
@@ -99,11 +120,29 @@ function appendMessage(name, img, side, text) {
           <div class="msg-info-name">${name}</div>
           <div class="msg-info-time">${formatDate(new Date())}</div>
         </div>
-        <div class="msg-text">${text}</div>
+        <div class="msg-text">${formattedText}</div>
       </div>
     </div>
   `;
 
   chatbox.insertAdjacentHTML("beforeend", msgHTML);
   chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+function formatMessageText(text) {
+  // Escape HTML
+  let formatted = text
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  // Bold: *text*
+  formatted = formatted.replace(/\*(.*?)\*/g, "<strong>$1</strong>");
+
+  // Italics: _text_
+  formatted = formatted.replace(/_(.*?)_/g, "<em>$1</em>");
+
+  // Line breaks
+  formatted = formatted.replace(/\n/g, "<br>");
+
+  return formatted;
 }
