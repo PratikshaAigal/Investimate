@@ -1,5 +1,27 @@
 import pandas as pd
 import joblib
+import yfinance as yf
+
+# Asset name to ticker symbol map
+TICKER_MAP = {
+    'Natural_Gas': 'NG=F',
+    'Crude_oil': 'CL=F',
+    'Copper': 'HG=F',
+    'Bitcoin': 'BTC-USD',
+    'Ethereum': 'ETH-USD',
+    'Platinum': 'PL=F',
+    'Gold': 'GC=F',
+    'Silver': 'SI=F',
+    'Apple': 'AAPL',
+    'Tesla': 'TSLA',
+    'Microsoft': 'MSFT',
+    'Google': 'GOOGL',
+    'Nvidia': 'NVDA',
+    'Amazon': 'AMZN',
+    'Netflix': 'NFLX',
+    'Meta': 'META',
+    'Berkshire': 'BRK-B'
+}
 def recommend_assets(user_risk_level: str, top_n: int = 5):
 
 
@@ -7,7 +29,7 @@ def recommend_assets(user_risk_level: str, top_n: int = 5):
     model = joblib.load('risk_model.pkl')
 
     # Predict using model (raw values, no scaling)
-    X = df[['Avg_Return', 'Volatility', 'Liquidity', 'Market_Risk', 'Timing_Risk']]
+    X = df[['Volatility', 'Liquidity', 'Market_Risk', 'Timing_Risk', 'Avg_Return']]
     df['Predicted_Risk_Label'] = model.predict(X)
 
     # Match risk label
@@ -27,8 +49,15 @@ def recommend_assets(user_risk_level: str, top_n: int = 5):
         axis=1
     )
 
+    # Market summary using apply
+    recommended['Market_Summary'] = recommended['Asset'].apply(
+        lambda asset: get_simple_market_summary(TICKER_MAP.get(asset)) if TICKER_MAP.get(
+            asset) else "No ticker symbol found."
+    )
+
     for col in ['Liquidity', 'Market_Risk', 'Timing_Risk']:
         recommended[col] = recommended[col].apply(format_large_number)
+
     return recommended[['Asset',
         'Avg_Return',
         'Volatility',
@@ -36,7 +65,8 @@ def recommend_assets(user_risk_level: str, top_n: int = 5):
         'Market_Risk',
         'Timing_Risk',
         'Predicted_Risk_Label',
-        'Explanation']].rename(
+        'Explanation',
+       'Market_Summary']].rename(
         columns={'Predicted_Risk_Label': 'Risk_Level'}
     ).to_dict('records')
 
@@ -51,3 +81,25 @@ def format_large_number(value):
         return f"{value / 1_000:.2f}K"
     else:
         return f"{value:.2f}"
+
+
+def get_simple_market_summary(ticker_symbol, period="7d"):
+    try:
+        ticker = yf.Ticker(ticker_symbol)
+        hist = ticker.history(period=period)
+        if hist.empty:
+            return f"No recent trend data for {ticker_symbol}."
+
+        close_prices = hist['Close']
+        start_price = close_prices.iloc[0]
+        end_price = close_prices.iloc[-1]
+        change = end_price - start_price
+        percent = (change / start_price) * 100
+        direction = "up" if change > 0 else "down"
+
+        return (
+            f"{ticker_symbol} is trading at ${end_price:.2f}, "
+            f"{direction} {abs(percent):.2f}% over the last {period.replace('d',' days')}."
+        )
+    except Exception as e:
+        return f"Error fetching trend for {ticker_symbol}: {str(e)}"

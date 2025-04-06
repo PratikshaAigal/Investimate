@@ -14,19 +14,6 @@ model = genai.GenerativeModel("gemini-2.0-flash")
 # Optional: Keep state between messages
 chat_session = model.start_chat(history=[])
 
-# def ask_gemini(message: str, context: str = "") -> str:
-#     """
-#     Sends a message to Gemini and returns the AI's response.
-#     Optionally adds user-specific context to the prompt.
-#     """
-#     try:
-#         prompt = f"{context}\n\nUser: {message}"
-#         response = chat_session.send_message(prompt)
-#         return response.text
-#     except Exception as e:
-#         return f"❗ Error communicating with Gemini: {str(e)}"
-
-
 def ask_gemini(message: str, context: str = "", recommendations: list = None, risk_level: str = "") -> str:
     """
     Sends a message to Gemini. If asset-related and recommendations are available,
@@ -43,7 +30,7 @@ def ask_gemini(message: str, context: str = "", recommendations: list = None, ri
                 if asset['Asset'].lower() in message_lower:
                     matched_assets.append(asset)
 
-        # 📄 Build enriched context if matches found
+        #  Build enriched context if matches found
         if matched_assets:
             asset_info = "\n".join(
                 f"{a['Asset']}: {a['Explanation']}" for a in matched_assets
@@ -68,10 +55,10 @@ These were the recommended assets:
 Now answer the user's question below.
 """
 
-        # 🧠 Combine with user message
+        #  Combine with user message
         prompt = f"{context}\n\nUser: {message}"
         response = chat_session.send_message(prompt)
         return response.text
 
     except Exception as e:
-        return f"❗ Error communicating with Gemini: {str(e)}"
+        return f" Error communicating with Gemini: {str(e)}"

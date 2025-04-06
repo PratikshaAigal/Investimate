@@ -196,7 +196,7 @@ asset_df.to_csv("asset_features.csv", index=False)
 print("✅ Saved asset_features.csv")
 
 # 5. Train ML Model
-X = asset_df[[ 'Volatility', 'Liquidity', 'Market_Risk', 'Timing_Risk, 'Avg_Return' ]]
+X = asset_df[[ 'Volatility', 'Liquidity', 'Market_Risk', 'Timing_Risk', 'Avg_Return' ]]
 y = asset_df['Risk_Level']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y,train_size=0.8, test_size=0.2, random_state=42)
