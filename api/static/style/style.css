@@ -4,8 +4,8 @@
     --body-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     --msger-bg: #fff;
     --border: 2px solid #ddd;
-    --left-msg-bg: #7d56a5;
-    --right-msg-bg: #439660;
+    --left-msg-bg: #28958B;
+    --right-msg-bg: #6075B3;
   }
   html, body {
     background: #efefef;
@@ -41,7 +41,7 @@
       border-radius: 45px;
       padding-right: 40px;
       padding-left: 40px;
-      color: #5865C3;
+      color: #4D5E90;
   }
   #chat-overlay {
       background: rgba(255,255,255,0.1);
@@ -385,7 +385,7 @@
     margin:auto;
     font-size:x-large;
     font-family: Raleway, sans-serif;
-    color:#008080;
+    color:#4D5E90;
   }
   @media (min-width: 450px) {
         .main-card {
@@ -425,7 +425,7 @@
       position: fixed;
       bottom: 100px;
       right: 15px;
-      background-color:  #008080;
+      background-color:  #4D5E90;
       color: #fff;
       padding: 6px 14px;
       border-radius: 20px;
@@ -446,7 +446,7 @@
     border: none;
     height: 48px;
     width: 48px;
-    background: #008080;
+    background: #4D5E90;
     padding: 14px;
     color:white;
   }
@@ -456,12 +456,12 @@
   }
   .line {
     height: 1px;
-    background-color: #008080;
+    background-color: #4D5E90;
     width: 100%;
     opacity: 0.2;
   }
   .main-title {
-    background-color: #008080;
+    background-color: #4D5E90;
     font-size: large;
     font-weight: bold;
     display: flex;

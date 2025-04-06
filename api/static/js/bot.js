@@ -1,7 +1,7 @@
 // === Constants ===
 const BOT_NAME = "Investimate";
 const PERSON_NAME = "You";
-const BOT_IMG = "/static/img/self-love.png";
+const BOT_IMG = "/static/img/fintech.png";
 const PERSON_IMG = "/static/img/person.png";
 
 // === DOM Elements ===
