@@ -1,25 +1,5 @@
 import pandas as pd
 import joblib
-# def recommend_assets(user_risk_level: str, top_n: int = 5):
-#     df = pd.read_csv('api/asset_risk_profiles.csv')
-#
-#     # Match Investimate's 'Moderate' with 'Medium'
-#     risk_map = {'Low': 'Low', 'Moderate': 'Medium', 'High': 'High'}
-#     mapped_risk = risk_map.get(user_risk_level, 'Medium')
-#
-#     filtered = df[df['Risk_Level'] == mapped_risk]
-#     recommended = filtered.sort_values(by='Avg_Return', ascending=False).head(top_n)
-#
-#     # Add explanation
-#     recommended['Explanation'] = (
-#             "It has an average return of " + (recommended['Avg_Return'] * 100).round(2).astype(str) +
-#             "% and volatility of " + recommended['Volatility'].round(4).astype(str) +
-#             ", matching your " + user_risk_level + " risk profile."
-#     )
-#
-#     return recommended[['Asset', 'Avg_Return', 'Volatility', 'Risk_Level', 'Explanation']].to_dict('records')
-
-
 def recommend_assets(user_risk_level: str, top_n: int = 5):
 
 
@@ -40,11 +20,34 @@ def recommend_assets(user_risk_level: str, top_n: int = 5):
     # Add explanation column row-wise
     recommended['Explanation'] = recommended.apply(
         lambda row: (
-            f"It has an average return of {(row['Avg_Return'] * 100):.2f}% and volatility of "
-            f"{row['Volatility']:.4f}, matching your {user_level} risk profile."
+            f"It offers an average return of {(row['Avg_Return'] * 100):.2f}% with a volatility of {row['Volatility']:.4f}. "
+            f"Liquidity is {row['Liquidity']}, Market Risk is {row['Market_Risk']}, and Timing Risk is {row['Timing_Risk']}, "
+            f"aligning with your {user_level} risk preference."
         ),
         axis=1
     )
-    return recommended[['Asset', 'Avg_Return', 'Volatility', 'Predicted_Risk_Label', 'Explanation']].rename(
+
+    for col in ['Liquidity', 'Market_Risk', 'Timing_Risk']:
+        recommended[col] = recommended[col].apply(format_large_number)
+    return recommended[['Asset',
+        'Avg_Return',
+        'Volatility',
+        'Liquidity',
+        'Market_Risk',
+        'Timing_Risk',
+        'Predicted_Risk_Label',
+        'Explanation']].rename(
         columns={'Predicted_Risk_Label': 'Risk_Level'}
     ).to_dict('records')
+
+
+def format_large_number(value):
+    abs_val = abs(value)
+    if abs_val >= 1_000_000_000:
+        return f"{value / 1_000_000_000:.2f}B"
+    elif abs_val >= 1_000_000:
+        return f"{value / 1_000_000:.2f}M"
+    elif abs_val >= 1_000:
+        return f"{value / 1_000:.2f}K"
+    else:
+        return f"{value:.2f}"

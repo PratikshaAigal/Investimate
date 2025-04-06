@@ -11,19 +11,32 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
-    body {
+    html,body {
       font-family: 'Inter', sans-serif;
+      height: 100%;
       background: url('{% static "img/background.png" %}') repeat center center;
       background-size: cover;
       background-attachment: scroll;
       min-height: 100vh;
       margin: 0;
       padding: 40px 20px;
-<!--      display: flex;-->
       display: block; /* Allow vertical flow */
       overflow-y: auto;
       align-items: center;
       justify-content: center;
+       overflow-x: hidden;
+        /* Hide scrollbar */
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    body::-webkit-scrollbar {
+      display: none;
+    }
+    .container-wrapper {
+      max-width: 700px;
+      margin: 60px auto; /* centers horizontally and adds space from top */
+      padding: 20px;
     }
 
     .card {
@@ -74,7 +87,7 @@
 </head>
 
 <body>
-
+  <div class="container-wrapper">
   <div class="card shadow-sm">
     <h2 class="mb-3 text-center">📊 Your Risk Score</h2>
 
@@ -98,37 +111,35 @@
     {% if recommendations %}
     <hr>
     <h5 class="mt-4">Top Investment Recommendations</h5>
-    <table class="table table-bordered mt-3">
-      <thead class="table-dark">
-        <tr>
-          <th>Asset</th>
-          <th>Average Return (%)</th>
-          <th>Volatility</th>
-          <th>Risk Level</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for asset in recommendations %}
-        <tr>
-          <td>{{ asset.Asset }}</td>
-          <td>{{ asset.Avg_Return|floatformat:2 }}</td>
-          <td>{{ asset.Volatility|floatformat:4 }}</td>
-          <td>
-            {% if asset.Risk_Level == "Low" %}
-              <span class="badge bg-success">Low</span>
-            {% elif asset.Risk_Level == "Medium" %}
-              <span class="badge bg-warning text-dark">Medium</span>
-            {% else %}
-              <span class="badge bg-danger">High</span>
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <br>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      {% for asset in recommendations %}
+      <div class="col">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">{{ asset.Asset }}</h5>
+            <p class="card-text">
+              <strong>Avg. Return:</strong> {{ asset.Avg_Return|floatformat:2 }}% <br>
+              <strong>Volatility:</strong> {{ asset.Volatility|floatformat:4 }}
+            </p>
+            <p class="mb-2">
+              <span class="badge bg-primary">Risk: {{ asset.Risk_Level }}</span>
+            </p>
+            <p>
+              <span class="badge bg-success">Liquidity: {{ asset.Liquidity }}</span>
+              <span class="badge bg-warning text-dark">Market Risk: {{ asset.Market_Risk }}</span>
+              <span class="badge bg-danger">Timing Risk: {{ asset.Timing_Risk }}</span>
+            </p>
+            <p class="mt-3 text-muted small">{{ asset.Explanation }}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
     {% endif %}
   </div>
-
+  </div>
   <!-- Chatbot styles should inherit primary color too -->
   <div id="chatbot" class="main-card collapsed">
     <div id="chat-label" class="chat-label">Chat with Investimate to learn more!</div>
@@ -153,9 +164,9 @@
             <div class="msg-info-name"> Investimate:</div>
             <div class="msg-info-time"><time id="clock"></time></div>
           </div>
-          <div class="msg-text">
-            Welcome to Investimate! 🌟.
-          </div>
+<!--          <div class="msg-text">-->
+<!--            Welcome to Investimate! 🌟.-->
+<!--          </div>-->
         </div>
       </div>
     </main>
